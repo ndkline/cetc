@@ -29,7 +29,7 @@ Allow: /modules/*.css?
 Allow: /modules/*.js$
 Allow: /modules/*.js?
 Allow: /modules/*.gif
-Allow: /modules/*.jpg
+Allow: /modules/*.jpg 
 Allow: /modules/*.jpeg
 Allow: /modules/*.png
 Allow: /profiles/*.css$
