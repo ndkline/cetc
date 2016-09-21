@@ -35,7 +35,7 @@ Allow: /modules/*.png
 Allow: /profiles/*.css$
 Allow: /profiles/*.css?
 Allow: /profiles/*.js$
-Allow: /profiles/*.js?
+Allow: /profiles/*.js? 
 Allow: /profiles/*.gif
 Allow: /profiles/*.jpg
 Allow: /profiles/*.jpeg
