@@ -26,7 +26,7 @@ Allow: /misc/*.jpeg
 Allow: /misc/*.png
 Allow: /modules/*.css$
 Allow: /modules/*.css?
-Allow: /modules/*.js$
+Allow: /modules/*.js$ 
 Allow: /modules/*.js?
 Allow: /modules/*.gif
 Allow: /modules/*.jpg 
