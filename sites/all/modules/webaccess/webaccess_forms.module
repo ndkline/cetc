@@ -1,0 +1,46 @@
+<?php
+/**
+ * Implements hook_menu().
+ */
+function webaccess_forms_menu_alter(&$items) {
+  // alter the user page callback so that it pushes to the webaccess form optionally
+  $items['user'] = array(
+    'page callback' => '_webaccess_forms_userpage',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+  );
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function webaccess_forms_form_alter(&$form, &$form_state, $form_id) {
+  // alter areas the user form can pop up
+  switch ($form_id) {
+    case 'user_profile_form':
+      unset($form['account']['pass']);
+    case 'user_login':
+      $form['pass'] = array(
+        '#type' => 'hidden',
+      );
+      $form['delete'] = array(
+        '#type' => 'hidden',
+      );
+    break;
+  }
+}
+
+/**
+ * Redirect from user page form to login
+ */
+function _webaccess_forms_userpage() {
+  global $user;
+  // If we are already logged on, go to the user page instead.
+  if ($user->uid) {
+    drupal_goto('user/'. $user->uid);
+  }
+  // I don't see a reason to show a message... just go to the form. 
+  if (user_is_anonymous()) {
+    drupal_goto('login');
+  }
+}

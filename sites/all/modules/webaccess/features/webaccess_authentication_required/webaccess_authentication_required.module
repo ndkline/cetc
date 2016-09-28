@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webaccess Authentication Required feature.
+ */
+
+include_once 'webaccess_authentication_required.features.inc';

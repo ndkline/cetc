@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Webaccess admauto example feature.
+ */
+
+include_once 'webaccess_admauto_example.features.inc';

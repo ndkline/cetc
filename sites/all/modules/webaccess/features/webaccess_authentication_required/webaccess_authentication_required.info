@@ -1,0 +1,14 @@
+name = Webaccess Authentication Required
+description = This feature forces webaccess to be required for login, common for many login based sites.
+core = 7.x
+package = Penn State
+version = 7.x-1.8
+project = webaccess_authentication_required
+dependencies[] = ctools
+dependencies[] = strongarm
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:1
+features[variable][] = webaccess_disallow_username_change
+features[variable][] = webaccess_domain
+features[variable][] = webaccess_init_enable
+features[variable][] = webaccess_secure_site

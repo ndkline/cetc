@@ -1,0 +1,12 @@
+name = Webaccess admauto example
+description = Example usage of webaccess_admauto to automatically grant adm accounts the role of 'guest' on login.
+core = 7.x
+package = Penn State
+version = 7.x-1.8
+project = webaccess_admauto_example
+dependencies[] = ctools
+dependencies[] = strongarm
+dependencies[] = webaccess_admauto
+features[ctools][] = strongarm:strongarm:1
+features[features_api][] = api:2
+features[variable][] = webaccess_admauto_role

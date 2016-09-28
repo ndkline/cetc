@@ -1,0 +1,63 @@
+<?php 
+/** Additional processing to try and avoid false access denied messages
+ *  This is possible because of the mixed authentication modes allowed
+ *  in Drupal + webaccess integrations.  Don't run this on sites that
+ *  allow native drupal logins in addition to webaccess as this could
+ *  force a webaccess prompt for someone that shouldn't be getting it.
+ *
+ *  Instead, use this on a site that's got two possible scenarios:
+ *  1. The user has passed webaccess already and is then passing to
+ *     your webaccess required site.
+ *  2. The only type of allowed user access is via webaccess logins
+ *     and you'd like to try and account for people that have already
+ *     logged in elsewhere but not the current drupal site.
+ *
+ *  This is purely a UX improvement module but since it can't be required
+ *  functionality of all sites it lives in its own helper module.
+ */
+
+/**
+ * Implements hook_webaccess_about_to_deny_access().
+ */
+function webaccess_catchad_webaccess_about_to_deny_access() {
+  // this operation only fired when we are about to be served access denied
+  global $base_url;
+  // See if they are annonymous and try and force them to a login screen instead.
+  if ($GLOBALS['user']->uid == 0) {
+    $dest = drupal_get_destination();
+    $options = array('query' => array('redirect_url' => $base_url . base_path() . $dest['destination']));
+    drupal_goto('login/cosign', $options);
+  }
+  // use case only for required secure sites access to avoid access denied
+  // being possible.  As this could be used for sniffing out the location of
+  // parts of the site as an attempt to compromise different things, we
+  // want to force this over to the homepage, provided we aren't already there.
+  // again, this is an extreme case typical of courses, intranets and any
+  // site that really is only interally focused.
+
+  // Also account for user 1 throwing an access denied on a secure site.
+  // This is nearly impossible except for things like file entities
+  // that won't respond to anyone but the user that created them.  Also some
+  // access control projects don't allow open access to resources for user 1.
+  // Testing for front page helps avoid a redirect loop.
+  if ($GLOBALS['user']->uid != 1 && variable_get("webaccess_secure_site", "") && !drupal_is_front_page()) {
+    drupal_goto('<front>');
+  }
+  
+  // this was a fun one
+  // trap for initial login case where user has been auto logged in via
+  // init hook in webaccess but previously hasn't accessed drupal.
+  // this causes there to be a lack of session when the page is evaluated
+  // by access control projects on webaccess required sites and causes
+  // the page to be delivered correctly outside of the node / page content
+  // itself.  This renders a false access denied error the first time
+  // people access the site and can cause all kind of headaches in usability
+  // and identification of the problem because even though it actually worked
+  // they were told it didn't.  Stupid.
+  // This checks that the user has an account but no session value
+  // meaning they were forcably logged in via Webaccess module.
+  if ($GLOBALS['user']->uid != 0 && !isset($GLOBALS['user']->sid)) {
+    $dest = drupal_get_destination();
+    drupal_goto($dest['destination']);
+  }
+}

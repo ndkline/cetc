@@ -1,0 +1,7 @@
+; $Id$
+name = WebAccess
+description = Use Cosign instead of Drupal for authentication. Originally based off the webserver_auth module.
+package = Penn State
+core = 7.x
+files[] = webaccess.module
+version = "7.x-1.8"

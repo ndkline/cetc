@@ -1,0 +1,43 @@
+<?php
+/**
+ * Look for accounts about to be created that end in adm and automatically
+ * grant them an administrator defined role.  If no role is established already
+ * via the variable webaccess_admauto_role then this module will do nothing.
+ *
+ * As this is attempting to automatically allow sites to comply with policy
+ * and people using this know what they are doing, there is no UI to do this
+ * at the moment. To utilize this in a build, do one of the following:
+ * 1. Run a drush command like drush vset webaccess_admauto_role guest
+ * 2. Add a hook_install() to a custom module and do variable_set('webaccess_admauto_role', 'guest')
+ * 3. Set it via one of the methods above, then export the setting as a feature.
+ *
+ * You can replace 'guest' with whatever role name you want to automatically
+ * grant, though it is recommended this be a level of access that's more of a
+ * 'viewer' role then a content creator so that you know why they are there.
+ *
+ * Typically this module comes into play where ITS helpdesk or World Campus
+ * helpdesk is attempting to help a student through a technical or instructional
+ * issue with a webaccess protected website and they need access.
+ */
+
+/**
+ * Implements hook_entity_insert().
+ *
+ * Make sure this is the user object
+ * And the role variable is set
+ * And 'adm' is the last 3 characters of the account name
+ * And 'adm' wasn't found at the first character position
+ * And the role can be loaded based on the name given
+ */
+function webaccess_admauto_entity_insert($entity, $type) {
+  // we have an entity of type user
+  if ($type == 'user' &&
+    !is_null(variable_get('webaccess_admauto_role', NULL)) &&
+    strrpos($entity->name, 'adm') === (strlen($entity->name) - 3) &&
+    strrpos($entity->name, 'adm') !== 0 &&
+    $role = user_role_load_by_name(variable_get('webaccess_admauto_role', NULL))
+      ) {
+    // automatically grant the adm associated role to this user account
+    $entity->roles[$role->rid] = $role->name;
+  }
+}

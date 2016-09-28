@@ -1,0 +1,8 @@
+; $Id$
+name = WebAccess ADM Auto
+description = Automatically grant administer support accounts that end in adm (abc123adm) a certain role on creation. Know what you are doing if you run this
+module, see the top of the webaccess_admauto.module file for details.
+package = Penn State
+core = 7.x
+dependencies[] = webaccess
+version = "7.x-1.8"

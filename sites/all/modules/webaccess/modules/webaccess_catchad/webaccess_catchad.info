@@ -1,0 +1,7 @@
+; $Id$
+name = WebAccess Catch Access Denied
+description = Provides additional integration with webaccess api to try and prevent invalid access denied messages.  Don't turn this on sites that allow for non-webaccess logins.
+package = Penn State
+core = 7.x
+dependencies[] = webaccess
+version = "7.x-1.8"
